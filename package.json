@@ -1,0 +1,47 @@
+{
+  "name": "agent-scraper",
+  "version": "1.0.0",
+  "description": "A powerful web scraping engine built for AI agents: a REST scraping engine plus an MCP server interface. Clean Markdown + structured JSON, content extraction, metadata, token-aware chunking, concurrent crawling, and optional Playwright rendering.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "agent-scraper-engine": "dist/engine/server.js",
+    "agent-scraper-mcp": "dist/mcp/server.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "engine": "node dist/engine/server.js",
+    "engine:dev": "tsx watch src/engine/server.ts",
+    "mcp": "node dist/mcp/server.js",
+    "mcp:dev": "tsx src/mcp/server.ts",
+    "start": "node dist/engine/server.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test dist/**/*.test.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "@mozilla/readability": "^0.5.0",
+    "cheerio": "^1.0.0",
+    "fastify": "^5.2.0",
+    "gpt-tokenizer": "^2.8.1",
+    "jsdom": "^25.0.1",
+    "p-limit": "^6.2.0",
+    "robots-parser": "^3.0.1",
+    "turndown": "^7.2.0",
+    "turndown-plugin-gfm": "^1.0.2",
+    "undici": "^7.3.0",
+    "zod": "^3.24.1"
+  },
+  "optionalDependencies": {
+    "playwright": "^1.49.1"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^22.10.5",
+    "@types/turndown": "^5.0.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

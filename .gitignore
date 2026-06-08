@@ -1,0 +1,13 @@
+node_modules/
+dist/
+*.log
+.env
+.DS_Store
+
+# Playwright browser binaries
+.cache/
+playwright-report/
+
+# Stale scraper output
+output.txt
+*.scrape.json
