@@ -48,6 +48,21 @@ npm install playwright
 npx playwright install chromium
 ```
 
+## Test
+
+The suite covers the core pipeline (fetch → extract → metadata → tokens),
+the crawler (depth/page bounds, domain & path filtering), search, and the
+REST engine's HTTP surface (using Fastify's `inject`, against local fixture
+servers — no network access required).
+
+```bash
+npm run build
+npm test
+```
+
+CI (`.github/workflows/ci.yml`) runs `typecheck`, `build` and `test` on
+Node 20 and 22 for every push and pull request.
+
 ## Run the MCP server (for agents)
 
 The MCP server is the primary, agent-facing interface. It speaks MCP over
@@ -140,6 +155,33 @@ Search a page:
 ```bash
 curl -s localhost:8080/search -H 'content-type: application/json' \
   -d '{"url":"https://example.com/pricing","query":"enterprise","contextChars":120}'
+```
+
+## Deploy with Docker
+
+The included `Dockerfile` builds a small, production-only image that runs the
+REST engine (the MCP server can run anywhere and point `ENGINE_URL` at it).
+
+```bash
+docker build -t agent-scraper .
+docker run -p 8080:8080 agent-scraper
+curl localhost:8080/health
+```
+
+A variant with Playwright/Chromium baked in (for `render: "browser"`) is
+available as the `engine-browser` build target — it's based on the official
+Playwright image and is significantly larger:
+
+```bash
+docker build --target engine-browser -t agent-scraper:browser .
+```
+
+`docker-compose.yml` wires up an `engine` service plus an `mcp` service that
+talks to it over `ENGINE_URL` (most agents instead launch the MCP server
+directly via stdio — see [Run the MCP server](#run-the-mcp-server-for-agents)):
+
+```bash
+docker compose up --build
 ```
 
 ## Use as a library

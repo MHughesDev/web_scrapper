@@ -1,0 +1,27 @@
+services:
+  engine:
+    build:
+      context: .
+      target: runtime
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      HOST: "0.0.0.0"
+      LOG_LEVEL: "info"
+    restart: unless-stopped
+
+  # MCP server talking to the `engine` service over HTTP, exposed for clients
+  # that connect to MCP over a network transport rather than stdio.
+  # Most agents launch the MCP server directly via stdio instead — see README.
+  mcp:
+    build:
+      context: .
+      target: runtime
+    command: ["node", "dist/mcp/server.js"]
+    environment:
+      ENGINE_URL: "http://engine:8080"
+    depends_on:
+      - engine
+    stdin_open: true
+    tty: true
